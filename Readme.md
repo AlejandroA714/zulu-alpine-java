@@ -14,7 +14,7 @@ Imagen Docker basada en **Alpine 3.22.1** con **Azul Zulu** Java. Permite elegir
 - Soporte de `tzdata` y variable `TZ` para zona horaria.  
 - JVM configurada en UTF-8 mediante `JAVA_TOOL_OPTIONS`.  
 - Variables de entorno listas para compilar y ejecutar (`JAVA_HOME`, `PATH`).  
-- Selección flexible del **tipo de JVM** en tiempo de build.
+- Selección flexible del **tipo de JVM** 
 
 ---
 
@@ -45,7 +45,7 @@ La imagen puede generar builds para estas líneas de Zulu (OpenJDK):
 | `zulu21`   | LTS | Última versión LTS (ideal para producción moderna). |
 
 Consulta las versiones exactas disponibles aquí:  
-[https://repos.azul.com/zulu/alpine/](https://repos.azul.com/zulu/alpine/)
+[https://www.azul.com/downloads/](https://www.azul.com/downloads/?os=alpine-linux&package=jdk#zulu)
 
 ---
 
