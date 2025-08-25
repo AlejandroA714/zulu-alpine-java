@@ -23,9 +23,9 @@ Imagen Docker basada en **Alpine 3.22.1** con **Azul Zulu** Java. Permite elegir
 | Arg               | Valor por defecto                              | Descripción |
 |-------------------|-----------------------------------------------|-------------|
 | `TIMEZONE`        | `America/El_Salvador`                         | Zona horaria del contenedor. |
-| `ZULU_VERSION`    | `zulu21`                                      | Línea de Zulu: soporta `zulu15`, `zulu17`, `zulu20`, `zulu21`, etc. |
+| `ZULU_VERSION`    | `AUTOCALCULADO`                               | Línea de Zulu: soporta `zulu15`, `zulu17`, `zulu20`, `zulu21`, etc. |
 | `JAVA_VERSION`    | `21.0.8`                                      | Versión específica del JDK/JRE (`major.minor.patch`). |
-| `JVM_TYPE`        | `jdk-headless`                                | Tipo de JVM a instalar:<br>- `jdk`: Kit completo con librerías gráficas.<br>- `jdk-headless`: JDK sin librerías gráficas (más liviano, ideal para servidores y compilación sin GUI).<br>- `jre`: Solo entorno de ejecución con librerías gráficas.<br>- `jre-headless`: Solo runtime minimalista. |
+| `JVM_TYPE`        | `jre-headless`                                | Tipo de JVM a instalar:<br>- `jdk`: Kit completo con librerías gráficas.<br>- `jdk-headless`: JDK sin librerías gráficas (más liviano, ideal para servidores y compilación sin GUI).<br>- `jre`: Solo entorno de ejecución con librerías gráficas.<br>- `jre-headless`: Solo runtime minimalista. |
 | `ZULU_KEY_URL`    | `https://cdn.azul.com/public_keys/alpine-signing@azul.com-5d5dc44c.rsa.pub` | URL pública de la clave GPG de Azul. |
 | `ZULU_KEY_SHA256` | `6c6393d4755818a15cf055a5216cffa599f038cd508433faed2226925956509a` | Hash SHA256 de la clave pública (para verificación de integridad). |
 
