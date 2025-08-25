@@ -24,7 +24,7 @@ jobs:
     strategy:
      fail-fast: false
      matrix:
-        jvm_type: [ jdk, jre ]
+        jvm_type: [ jdk-headless, jre-headless ]
     steps: 
     # pull to lastes commit
       - name: Checkout
