@@ -4,6 +4,7 @@ Imagen Docker basada en **Alpine 3.22.1** con **Azul Zulu** Java. Permite elegir
 
 > Ideal para compilación (JDK) y/o ejecución (JRE o Headless), con verificación de integridad de la clave del repo de Azul.
 
+https://hub.docker.com/repository/docker/alejandroa714/zulu-jvm/general
 ---
 
 ## Características
