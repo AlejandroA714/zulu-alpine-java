@@ -12,11 +12,6 @@ on:
         description: "JAVA_VERSION para build-arg (e.g., 21.0.8, 17.0.6, 15)"
         required: false
         default: "21.0.8"
-      zulu_version:
-        description: "ZULU_VERSION (e.g., zulu21, zulu17). Si vacío, tu Dockerfile puede calcularlo."
-        required: false
-        default: "zulu21"
-
 jobs:
   build:
     name: Build - ${{matrix.jvm_type}}
