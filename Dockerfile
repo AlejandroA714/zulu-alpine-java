@@ -26,7 +26,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8' TZ=${TIMEZONE}
 
 # AVOID wget SSL error
 #
-RUN apk add --no-cache ca-certificates wget tzdata coreutils && update-ca-certificates
+RUN apk add --no-cache ca-certificates wget tzdata && update-ca-certificates
 
 # Dowload ZULU PubKey
 #
@@ -34,23 +34,22 @@ RUN wget --quiet ${ZULU_KEY_URL} -P /etc/apk/keys/
 
 # Validates CHECKSUM
 #
-RUN echo "${ZULU_KEY_SHA256} /etc/apk/keys/alpine-signing@azul.com-5d5dc44c.rsa.pub" | sha256sum -c - 
+RUN echo "${ZULU_KEY_SHA256}  /etc/apk/keys/alpine-signing@azul.com-5d5dc44c.rsa.pub" | sha256sum -c - 
 
 # Add repository
 #
-RUN echo "https://repos.azul.com/zulu/alpine" | tee -a /etc/apk/repositories \
-    && apk update
-
+RUN echo "https://repos.azul.com/zulu/alpine" >> /etc/apk/repositories 
 
 # Install ZULU JDK
-RUN if echo "$JAVA_VERSION" | grep -Eq '^[0-9]+$'; then \
-      printf "\n⚠️  WARNING: JAVA_VERSION=%s no es específico.\n" "$JAVA_VERSION"; \
+RUN set -eux; \
+    if echo "$JAVA_VERSION" | grep -Eq '^[0-9]+$'; then \
+      printf "\nWARNING: JAVA_VERSION=%s no es específico.\n" "$JAVA_VERSION"; \
       printf "Instalando la última versión estable disponible para %s...\n\n" "$ZULU_VERSION"; \
       # apk add > /dev/null elimina su salida estándar
-      apk add --no-cache "${ZULU_VERSION}-${JVM_TYPE}" > /dev/null 2>&1; \
+      apk add --no-cache "${ZULU_VERSION}-${JVM_TYPE}"; \
     else \
       printf "\nInstalando versión exacta: %s-%s~=%s\n\n" "$ZULU_VERSION" "$JVM_TYPE" "$JAVA_VERSION"; \
-      apk add --no-cache "${ZULU_VERSION}-${JVM_TYPE}~=${JAVA_VERSION}"  > /dev/null 2>&1; \
+      apk add --no-cache "${ZULU_VERSION}-${JVM_TYPE}~=${JAVA_VERSION}"; \
     fi
 
 # SET JAVA_HOME
