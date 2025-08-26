@@ -1,30 +1,70 @@
-name: Docker Build to Docker Hub (multi-arch)
+name: Build to Docker Hub (multi-arch)
 
 env:
+  IMAGE_NAME: docker.io/alejandroa714/zulu-jvm
   PLATFORMS: linux/amd64,linux/arm64
-
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
     inputs:
       java_version:
-        description: "JAVA_VERSION para el build-arg"
+        description: "JAVA_VERSION para build-arg (e.g., 21.0.8, 17.0.6, 15)"
         required: false
         default: "21.0.8"
-      zulu_version:
-        description: "ZULU_VERSION para el build-arg (zulu17, zulu21, etc.)"
-        required: false
-        default: "zulu21"
-      image_repo:
-        description: "Repositorio en Docker Hub (usuario/repo)"
-        required: false
-        default: "tuusuario/zulu-java-alpine"
-
 jobs:
   build:
+    name: Build - ${{matrix.jvm_type}}
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    strategy:
+     fail-fast: false
+     matrix:
+        jvm_type: [ jdk-headless, jre-headless ]
+    steps: 
+    # pull to lastes commit
+      - name: Checkout
+        uses: actions/checkout@v4
+    # Resolves input arguments or use defaults
+      - name: Resolve inputs/defaults
+        id: vars
+        run: |
+          echo "JAVA_VERSION=${{ github.event.inputs.java_version || '21.0.8' }}" >> $GITHUB_OUTPUT
+          echo "ZULU_VERSION=${{ github.event.inputs.zulu_version || 'zulu21' }}" >> $GITHUB_OUTPUT
+          echo "JVM_TYPE=${{ matrix.jvm_type }}" >> $GITHUB_OUTPUT
+    # Will Build for linux/amd64, arm64
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+    # Authenticate with Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+    # Add metada to image
+      - name: Docker (tags/labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ steps.vars.outputs.JAVA_VERSION }}-${{ steps.vars.outputs.JVM_TYPE }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+    # Build and push
+      - name: Build & Push (multi-arch)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: ${{ env.PLATFORMS }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            JAVA_VERSION=${{ steps.vars.outputs.JAVA_VERSION }}
+            JVM_TYPE=${{ steps.vars.outputs.JVM_TYPE }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+    
