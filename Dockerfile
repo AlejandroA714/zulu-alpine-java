@@ -43,7 +43,7 @@ RUN set -eux; \
 RUN echo "Ejecutando jlink para generar runtime optimizado..."; \
     /usr/lib/jvm/${ZULU_VERSION}/bin/jlink \
     --module-path /usr/lib/jvm/${ZULU_VERSION}/jmods \
-    --add-modules java.base,java.sql,java.naming,java.xml,jdk.unsupported,java.desktop,jdk.management,java.management,java.net.http,java.logging \
+    --add-modules java.base,java.sql,java.naming,java.xml,java.instrument,jdk.unsupported,java.desktop,jdk.management,java.management,java.net.http,java.logging \
     --strip-debug \
     --no-header-files \
     --no-man-pages \
