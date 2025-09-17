@@ -56,6 +56,10 @@ FROM alpine:3.22.1
 # TZ
 ARG TIMEZONE='America/El_Salvador'
 
+# Create a non-root user to run the application
+#
+RUN addgroup -S spring && adduser -S spring -G spring
+
 # Install CA Certificates
 #
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
@@ -66,12 +70,22 @@ COPY --from=builder /opt/java-runtime /usr/lib/jvm/current
 
 # Set Timezone
 # hadolint ignore=DL3018
-RUN apk add --no-cache tzdata
+RUN apk add --no-cache tzdata \ 
+    && mkdir -p /app \
+    && chown -R spring:spring /app
 
 # SET JAVA_HOME
 #
-ENV LANG=C.UTF-8 \
+ENV LANG=C.utf8 \
     JAVA_HOME=/usr/lib/jvm/current \
     PATH=/usr/lib/jvm/current/bin:$PATH \
     TZ=${TIMEZONE} \
     JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
+
+# NON-ROOT USER
+#
+USER spring:spring
+
+# DEFAULT DIRECTORY 
+#
+WORKDIR /app
