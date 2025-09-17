@@ -1,7 +1,7 @@
 name: Build to Docker Hub (multi-arch)
 
 env:
-  IMAGE_NAME: docker.io/alejandroa714/zulu-jvm
+  IMAGE_NAME: docker.io/alejandroa714/zulu-alpine-java
   PLATFORMS: linux/amd64,linux/arm64
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
     strategy:
      fail-fast: false
      matrix:
-        jvm_type: [ jdk-headless, jre-headless ]
+        jvm_type: [ jdk-headless ]
     steps: 
     # pull to lastes commit
       - name: Checkout
