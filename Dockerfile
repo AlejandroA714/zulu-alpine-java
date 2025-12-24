@@ -1,5 +1,5 @@
 # Alpine Latest 25/08/25
-FROM alpine:3.22.2 AS builder
+FROM alpine:3.23.2 AS builder
 
 # JAVA VERSION
 ARG JAVA_VERSION="21.0.8"
@@ -50,7 +50,7 @@ RUN echo "Ejecutando jlink para generar runtime optimizado..."; \
     --compress 1 \
     --output /opt/java-runtime; 
 
-FROM alpine:3.22.2
+FROM alpine:3.23.2
 
 # Build Args
 # TZ
